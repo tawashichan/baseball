@@ -9,7 +9,7 @@ export const Debug: React.SFC<{}> = (props: {}) => {
     return (
         <div>
             <div onClick={auto}>
-                しあいかいし
+                かいし
             </div>
         </div>
     )
