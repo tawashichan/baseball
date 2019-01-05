@@ -10,50 +10,49 @@ import {
     Score,
     Strike
 } from "../types/game";
-import {Bat, Player, Throw} from "../types/player";
-import {Team} from "../types/team";
+import { Bat, Player, Throw } from "../types/player";
+import { Team } from "../types/team";
 
 
-export function initializeTeam() : Team {
-    return {
+export const initializeTeam = (): Team => (
+    {
         players: []
     }
-}
+)
 
-
-export function initializeFieldPlayer() : FieldPlayer {
-    return {
+export const initializeFieldPlayer = (): FieldPlayer => (
+    {
         batOrder: BatOrder.ONE,
         position: Position.PITCHER,
         player: initializePlayerWithScore()
     }
-}
+)
 
-function initializeScore() : Score {
-    return {
+const initializeScore = (): Score => (
+    {
         count: 0,
         result: initializeBatResult()
     }
-}
+)
 
-function initializeBatResult() : BatResult {
-    return {
+const initializeBatResult = (): BatResult => (
+    {
         hittingType: HittingType.GROUND_BALL,
         hitType: HitType.OUT,
         direction: Direction.PITCHER
     }
-}
+)
 
-export function initializePlayerWithScore() : PlayerWithScore {
-    return {
+export const initializePlayerWithScore = (): PlayerWithScore => (
+    {
         player: initializePlayer(),
         score: initializeScore()
     }
-}
+)
 
 
-export function initializePlayer() : Player {
-    return {
+export const initializePlayer = (): Player => (
+    {
         name: "hoge",
         age: 0,
         grade: 1,
@@ -78,16 +77,16 @@ export function initializePlayer() : Player {
         stamina: 0,
         recovery: 0,
         mental: 0,
-        breakingBalls:[],
+        breakingBalls: [],
         ballPower: 0,
         growth: 0,
         toughness: 0,
         fatigue: 0
     }
-}
+)
 
-export function initializeGame() {
-    return {
+export const initializeGame = () => (
+    {
         inning: 0,
         inningType: InningType.TOP,
         outs: OUT.NO,
@@ -107,19 +106,19 @@ export function initializeGame() {
         topOutFieldPlayers: [],
         bottomOutFieldPlayers: []
     }
-}
+)
 
-export function proceed(game: Game) : Game {
+export const proceed = (game: Game): Game => {
 
     const currentBatter = getCurrentBatter(game);
     const currentPitcher = getCurrentPitcher(game);
     console.log(currentBatter);
     console.log(currentPitcher);
 
-    return Object.assign({},game,{
-            bottomRun: game.bottomRun + 1,
-            outs: game.outs + 1
-        }
+    return Object.assign({}, game, {
+        bottomRun: game.bottomRun + 1,
+        outs: game.outs + 1
+    }
     )
 }
 
@@ -127,29 +126,29 @@ export function proceed(game: Game) : Game {
 
 }*/
 
-function getCurrentBatter(game: Game) : FieldPlayer | undefined {
-    if (game.inningType === InningType.TOP){
+const getCurrentBatter = (game: Game): FieldPlayer | undefined => {
+    if (game.inningType === InningType.TOP) {
         return game.topFieldPlayers.find((player) => player.batOrder === game.topBatOrder)
     } else {
         return game.bottomFieldPlayers.find((player) => player.batOrder === game.bottomBatOrder)
     }
 }
 
-function getCurrentPitcher(game: Game) : FieldPlayer | undefined {
-    if (game.inningType === InningType.TOP){
-        return findFieldPlayerByPosition(game.topFieldPlayers,Position.PITCHER)
+const getCurrentPitcher = (game: Game): FieldPlayer | undefined => {
+    if (game.inningType === InningType.TOP) {
+        return findFieldPlayerByPosition(game.topFieldPlayers, Position.PITCHER)
     } else {
-        return findFieldPlayerByPosition(game.bottomFieldPlayers,Position.PITCHER)
+        return findFieldPlayerByPosition(game.bottomFieldPlayers, Position.PITCHER)
     }
 }
 
-function findFieldPlayerByPosition(fieldPlayers: FieldPlayer[],position: Position) : FieldPlayer | undefined {
+const findFieldPlayerByPosition = (fieldPlayers: FieldPlayer[], position: Position): FieldPlayer | undefined => {
     return fieldPlayers.find((player) => player.position === position)
 }
 
-export function autoGame(game: Game) : Game {
+export const autoGame = (game: Game): Game => {
     console.log(game);
-    if (isGameSet(game)){
+    if (isGameSet(game)) {
         return game
     } else {
         const nextState = game.outs === OUT.THREE ? changeOffence(game) : game;
@@ -157,17 +156,17 @@ export function autoGame(game: Game) : Game {
     }
 }
 
-export function isGameSet(game: Game) : boolean {
+export const isGameSet = (game: Game): boolean => {
     if (game.outs !== OUT.THREE) {
         return false
     }
-    if (game.inning < 9){
+    if (game.inning < 9) {
         return false
     }
-    if (game.inning === 13){
+    if (game.inning === 13) {
         return true
     }
-    switch (game.inningType){
+    switch (game.inningType) {
         case InningType.TOP:
             return game.topRun < game.bottomRun;
         case InningType.BOTTOM:
@@ -177,8 +176,8 @@ export function isGameSet(game: Game) : boolean {
     }
 }
 
-export function changeOffence(game: Game) : Game {
-    return Object.assign({},game,{
+export const changeOffence = (game: Game): Game => (
+    Object.assign({}, game, {
         inning: game.inningType === InningType.BOTTOM ? game.inning + 1 : game.inning,
         inningType: game.inningType === InningType.TOP ? InningType.BOTTOM : InningType.TOP,
         outs: OUT.NO,
@@ -187,5 +186,5 @@ export function changeOffence(game: Game) : Game {
         runnerThird: null,
         strike: Strike.NO,
         ball: Ball.NO
-    });
-}
+    })
+)
